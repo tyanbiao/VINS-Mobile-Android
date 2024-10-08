@@ -1,7 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
+//    ndkVersion "20.1.5948944"
     compileSdkVersion 28
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.thkoeln.jmoeller.vins_mobile_androidport"
         minSdkVersion 21
@@ -11,11 +16,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_TOOLCHAIN=gcc', "-DANDROID_STL=gnustl_static", '-DCMAKE_BUILD_TYPE=Release'
+                arguments "-DANDROID_STL=c++_static", '-DCMAKE_BUILD_TYPE=Release'
                 cppFlags "-std=gnu++11 -frtti -fopenmp -fexceptions -O3 -funsafe-math-optimizations"
             }
         }
-        ndk{
+        ndk {
 //            abiFilters 'armeabi-v7a'
             abiFilters 'arm64-v8a'
         }
