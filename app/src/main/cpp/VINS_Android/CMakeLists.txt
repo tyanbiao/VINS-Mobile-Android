@@ -3,7 +3,7 @@ set(${TARGET_NAME}_SRCS
     ViewController.cpp
 )
 
-SET(OpenCV_DIR D:/development_kit/C++/OpenCV-android-sdk/sdk/native/jni)
+SET(OpenCV_DIR /Users/tangyanbiao/Projects/VINS_Modules/OpenCV-3.4.5-android-sdk/sdk/native/jni)
 find_package(OpenCV REQUIRED)
 
 add_library(

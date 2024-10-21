@@ -1,4 +1,4 @@
-set(boost_include_dir D:/development_kit/C++/boost_1_86_0)
+set(boost_include_dir /Users/tangyanbiao/Projects/VINS_Modules/boost_1_63_0)
 add_library(boost_LIB INTERFACE)
 target_include_directories(
     boost_LIB
