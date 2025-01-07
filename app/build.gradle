@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    ndkVersion "17.2.4988734"
     compileSdkVersion 28
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
