@@ -84,7 +84,7 @@ public class Vins implements SensorEventListener, LocationListener {
             default:
                 break;
         }
-        if (lastAccSensorEvent != null && lastGyrSensorEvent != null && lastAccSensorEvent.timestamp == lastGyrSensorEvent.timestamp) {
+        if (lastAccSensorEvent != null && lastGyrSensorEvent != null) {
             long timeNanos = lastAccSensorEvent.timestamp;
             double ax = lastAccSensorEvent.values[0];
             double ay = lastAccSensorEvent.values[1];
