@@ -58,6 +58,7 @@ build
 .externalNativeBuild
 
 .idea
-gradle/
+gradle/*
 gradle*
 log
+!gradle/wrapper/gradle-wrapper.properties
