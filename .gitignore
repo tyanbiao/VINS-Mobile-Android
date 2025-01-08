@@ -61,5 +61,6 @@ build
 gradle/*
 gradle*
 log
-!gradle/wrapper/gradle-wrapper.properties
+!/gradle/wrapper/gradle-wrapper.properties
 .cxx
+!/gradle.properties
