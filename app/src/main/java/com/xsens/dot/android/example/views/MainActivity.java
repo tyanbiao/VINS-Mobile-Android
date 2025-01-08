@@ -52,6 +52,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 
+import com.vell.vins.JavaCameraActivity;
 import com.xsens.dot.android.example.R;
 import com.xsens.dot.android.example.databinding.ActivityMainBinding;
 import com.xsens.dot.android.example.interfaces.ScanClickInterface;
@@ -243,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
 
             case R.id.action_scan:
-
                 if (mScanListener != null && checkBluetoothAndPermission()) {
                     // Make sure th location permission is granted then start/stop scanning.
                     if (mIsScanning) mScanListener.onScanTriggered(false);
@@ -255,7 +255,11 @@ public class MainActivity extends AppCompatActivity {
                 // When the streaming button is clicked, notify to DataFragment and wait for the syncing result.
                 mStreamingListener.onStreamingTriggered();
                 break;
-
+            case R.id.action_vins:
+                if (isNoConnectedSensor()) break;
+                Intent intent = new Intent(MainActivity.this, JavaCameraActivity.class);
+                startActivity(intent);
+                break;
             case R.id.action_measure:
                 if (isNoConnectedSensor()) break;
 

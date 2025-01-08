@@ -1,5 +1,6 @@
-apply plugin: 'com.android.application'
-
+plugins {
+    id 'com.android.library'
+}
 android {
     ndkVersion "17.2.4988734"
     compileSdkVersion 31
@@ -8,7 +9,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     defaultConfig {
-        applicationId "com.thkoeln.jmoeller.vins_mobile_androidport"
+        namespace "com.thkoeln.jmoeller.vins_mobile_androidport"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1

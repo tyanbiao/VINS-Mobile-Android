@@ -16,20 +16,26 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_measure"
+        android:id="@+id/action_vins"
         android:orderInCategory="2"
+        android:title="@string/menu_vins"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_measure"
+        android:orderInCategory="3"
         android:title="@string/menu_measure"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_ota"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         android:title="@string/ota"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_mfm"
-        android:orderInCategory="4"
+        android:orderInCategory="5"
         android:title="@string/mfm"
         app:showAsAction="never" />
 </menu>

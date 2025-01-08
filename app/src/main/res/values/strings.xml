@@ -15,6 +15,7 @@
     <string name="menu_start_streaming">Start</string>
     <string name="menu_stop_streaming">Stop</string>
     <string name="menu_measure">Measure</string>
+    <string name="menu_vins">VINS</string>
 
     <string name="disconnected">Disconnected</string>
     <string name="connecting">Connecting</string>
