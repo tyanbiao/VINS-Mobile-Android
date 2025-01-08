@@ -12,6 +12,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 
+import com.vell.vins.xsens.SensorDataListener;
+import com.xsens.dot.android.sdk.events.XsensDotData;
+
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -24,7 +27,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class Vins implements SensorEventListener, LocationListener {
+public class Vins implements SensorEventListener, LocationListener, SensorDataListener {
     private static final String TAG = Vins.class.getSimpleName();
     private String configPath = "/sdcard/vell_vins/config/mix2_480p";
     private long cameraTimestampsShiftWrtSensors = 0;
@@ -39,7 +42,7 @@ public class Vins implements SensorEventListener, LocationListener {
     public void recvImage(final long imageTimestamp, final Mat originMat) {
         double timeSec = (imageTimestamp + cameraTimestampsShiftWrtSensors) / 1000000000.0 + sensorTimestampDalta;
 
-        Log.d(TAG, String.format("recvImage: %f", timeSec));
+//        Log.d(TAG, String.format("recvImage: %f", timeSec));
 
         slamRecorder.recvImage(timeSec, originMat);
         VinsUtils.recvImage(timeSec, originMat.nativeObj);
@@ -48,7 +51,7 @@ public class Vins implements SensorEventListener, LocationListener {
     public void recvImu(long timeNanos, final double ax, final double ay, final double az, final double gx, final double gy, final double gz) {
         double timeSec = timeNanos / 1000000000.0 + sensorTimestampDalta;
 
-        Log.d(TAG, String.format("recvImu: %f,%f,%f,%f,%f,%f,%f", timeSec, ax, ay, az, gx, gy, gz));
+//        Log.d(TAG, String.format("recvImu: %f,%f,%f,%f,%f,%f,%f", timeSec, ax, ay, az, gx, gy, gz));
 
         slamRecorder.recvImu(timeSec, ax, ay, az, gx, gy, gz);
         VinsUtils.recvImu(timeSec, ax, ay, az, gx, gy, gz);
@@ -58,7 +61,7 @@ public class Vins implements SensorEventListener, LocationListener {
                         final double posAccuracy) {
         double timeSec = timeNanos / 1000000000.0 + sensorTimestampDalta;
 
-        Log.d(TAG, String.format("recvGPS: %f,%f,%f,%f,%f", timeSec, latitude, longitude, altitude, posAccuracy));
+//        Log.d(TAG, String.format("recvGPS: %f,%f,%f,%f,%f", timeSec, latitude, longitude, altitude, posAccuracy));
 
         slamRecorder.recvGPS(timeSec, latitude, longitude, altitude, posAccuracy);
         VinsUtils.recvGPS(timeSec, latitude, longitude, altitude, posAccuracy);
@@ -126,5 +129,16 @@ public class Vins implements SensorEventListener, LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    /**
+     * 监听 xsens 数据
+     * @param address
+     * @param data
+     */
+
+    @Override
+    public void onXsensDataChanged(String address, XsensDotData data) {
+        Log.d(TAG, "xsens data received from " + address + ", acc=" + data.getAcc().toString());
     }
 }

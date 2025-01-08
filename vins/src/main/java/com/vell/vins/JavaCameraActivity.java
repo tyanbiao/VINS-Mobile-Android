@@ -32,6 +32,8 @@ import android.widget.Toast;
 
 
 import com.thkoeln.jmoeller.vins_mobile_androidport.R;
+import com.vell.vins.xsens.SensorDataListener;
+import com.vell.vins.xsens.SensorDataManager;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -107,8 +109,8 @@ public class JavaCameraActivity extends Activity {
             });
             image.close();
 
-            Log.i(TAG, "pos: " + VinsUtils.getLatestPosition()[0]);
-            Log.i(TAG, "rot: " + VinsUtils.getLatestRotation()[0]);
+//            Log.i(TAG, "pos: " + VinsUtils.getLatestPosition()[0]);
+//            Log.i(TAG, "rot: " + VinsUtils.getLatestRotation()[0]);
         }
     };
 
@@ -174,6 +176,7 @@ public class JavaCameraActivity extends Activity {
 
         subscribeToImuUpdates(vins, SensorManager.SENSOR_DELAY_FASTEST);
         subscribeToLocationUpdates(vins, 20);
+        subscribeToXsensUpdates(vins);
 
         // 增加gps信息展示
         final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -288,6 +291,10 @@ public class JavaCameraActivity extends Activity {
         final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         final String bestProvider = locationManager.getBestProvider(new Criteria(), false);
         locationManager.requestLocationUpdates(bestProvider, minTimeMsec, 0.01f, listener);
+    }
+
+    private void subscribeToXsensUpdates(SensorDataListener listener) {
+        SensorDataManager.getInstance().addListener(listener);
     }
 
     static {

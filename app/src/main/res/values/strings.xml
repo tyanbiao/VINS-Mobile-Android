@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Xsens DOT Example</string>
+    <string name="app_name">Xsens DOT VINS</string>
 
     <string name="tracker_name">Xsens DOT</string>
 

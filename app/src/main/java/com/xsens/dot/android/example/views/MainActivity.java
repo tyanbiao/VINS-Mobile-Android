@@ -53,13 +53,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 
 import com.vell.vins.JavaCameraActivity;
+import com.vell.vins.xsens.SensorDataManager;
 import com.xsens.dot.android.example.R;
 import com.xsens.dot.android.example.databinding.ActivityMainBinding;
+import com.xsens.dot.android.example.interfaces.DataChangeInterface;
 import com.xsens.dot.android.example.interfaces.ScanClickInterface;
 import com.xsens.dot.android.example.interfaces.StreamingClickInterface;
 import com.xsens.dot.android.example.utils.Utils;
 import com.xsens.dot.android.example.viewmodels.BluetoothViewModel;
 import com.xsens.dot.android.example.viewmodels.SensorViewModel;
+import com.xsens.dot.android.sdk.events.XsensDotData;
 
 /**
  * The main activity.
@@ -96,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
     public static String sCurrentFragment = FRAGMENT_TAG_SCAN;
 
     private EasyMfmFragment mMfmFragment;
+
+    private DataChangeInterface mDataChangeCallback = new DataChangeInterface() {
+        public void onDataChanged(String address, XsensDotData data) {
+            SensorDataManager.getInstance().updateData(address, data);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,6 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_vins:
                 if (isNoConnectedSensor()) break;
+                mSensorViewModel.setDataChangeCallback(mDataChangeCallback);
                 Intent intent = new Intent(MainActivity.this, JavaCameraActivity.class);
                 startActivity(intent);
                 break;
