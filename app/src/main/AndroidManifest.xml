@@ -23,7 +23,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity
+            android:name="com.vell.vins.JavaCameraActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="landscape">
+        </activity>
         <activity
             android:name=".views.MainActivity"
             android:screenOrientation="portrait"

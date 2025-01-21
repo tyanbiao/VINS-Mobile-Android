@@ -12,8 +12,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 
-import com.vell.vins.xsens.SensorDataListener;
-import com.xsens.dot.android.sdk.events.XsensDotData;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
@@ -27,7 +25,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class Vins implements SensorEventListener, LocationListener, SensorDataListener {
+public class Vins implements SensorEventListener, LocationListener {
     private static final String TAG = Vins.class.getSimpleName();
     private String configPath = "/sdcard/vell_vins/config/mix2_480p";
     private long cameraTimestampsShiftWrtSensors = 0;
@@ -129,16 +127,5 @@ public class Vins implements SensorEventListener, LocationListener, SensorDataLi
     @Override
     public void onProviderDisabled(String provider) {
 
-    }
-
-    /**
-     * 监听 xsens 数据
-     * @param address
-     * @param data
-     */
-
-    @Override
-    public void onXsensDataChanged(String address, XsensDotData data) {
-        Log.d(TAG, "xsens data received from " + address + ", acc=" + data.getAcc().toString());
     }
 }

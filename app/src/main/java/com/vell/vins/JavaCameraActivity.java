@@ -1,5 +1,6 @@
 package com.vell.vins;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -20,20 +21,17 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.thkoeln.jmoeller.vins_mobile_androidport.R;
-import com.vell.vins.xsens.SensorDataListener;
-import com.vell.vins.xsens.SensorDataManager;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -114,6 +112,7 @@ public class JavaCameraActivity extends Activity {
         }
     };
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,7 +175,6 @@ public class JavaCameraActivity extends Activity {
 
         subscribeToImuUpdates(vins, SensorManager.SENSOR_DELAY_FASTEST);
         subscribeToLocationUpdates(vins, 20);
-        subscribeToXsensUpdates(vins);
 
         // 增加gps信息展示
         final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -287,14 +285,11 @@ public class JavaCameraActivity extends Activity {
         sm.registerListener(listener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), delay);
     }
 
+    @SuppressLint("MissingPermission")
     private void subscribeToLocationUpdates(LocationListener listener, long minTimeMsec) {
         final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         final String bestProvider = locationManager.getBestProvider(new Criteria(), false);
         locationManager.requestLocationUpdates(bestProvider, minTimeMsec, 0.01f, listener);
-    }
-
-    private void subscribeToXsensUpdates(SensorDataListener listener) {
-        SensorDataManager.getInstance().addListener(listener);
     }
 
     static {
