@@ -1,6 +1,5 @@
 package com.vell.vins;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -21,8 +20,11 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +34,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.vell.vins.xsens.SensorData;
 import com.vell.vins.xsens.SensorDataAdapter;
 import com.vell.vins.xsens.XsensSensorData;
 import com.xsens.dot.android.example.R;
@@ -114,7 +115,7 @@ public class JavaCameraActivity extends Activity implements DataChangeInterface 
                 public void run() {
                     ((ImageView) findViewById(R.id.java_camera_view)).setImageBitmap(originBitmap);
 
-//                    ((TextView) findViewById(R.id.tv_info)).setText(infoBuilder.toString());
+                    ((TextView) findViewById(R.id.tv_info)).setText(infoBuilder.toString());
                 }
             });
             image.close();
@@ -124,7 +125,6 @@ public class JavaCameraActivity extends Activity implements DataChangeInterface 
         }
     };
 
-    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,39 +140,39 @@ public class JavaCameraActivity extends Activity implements DataChangeInterface 
         javaCamera = new JavaCamera();
         javaCamera.addImageReader(imageReader);
 
-//        findViewById(R.id.tv_info).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (useLocalImage) {
-//                    useLocalImage = false;
-//                    Toast.makeText(JavaCameraActivity.this, "使用摄像头数据", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    useLocalImage = true;
-//                    Toast.makeText(JavaCameraActivity.this, "使用本地数据", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//
-//        findViewById(R.id.save_image).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                saveFrame = true;
-//            }
-//        });
-//        findViewById(R.id.record).setOnClickListener(new View.OnClickListener() {
-//            boolean isRecording = false;
-//
-//            @Override
-//            public void onClick(View v) {
-//                if (isRecording) {
-//                    vins.slamRecorder.stopRecord();
-//                } else {
-//                    vins.slamRecorder.startRecord();
-//                }
-//                isRecording = vins.slamRecorder.isRecording();
-//                ((TextView) v).setText(isRecording ? "停止" : "录像");
-//            }
-//        });
+        findViewById(R.id.tv_info).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (useLocalImage) {
+                    useLocalImage = false;
+                    Toast.makeText(JavaCameraActivity.this, "使用摄像头数据", Toast.LENGTH_SHORT).show();
+                } else {
+                    useLocalImage = true;
+                    Toast.makeText(JavaCameraActivity.this, "使用本地数据", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        findViewById(R.id.save_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveFrame = true;
+            }
+        });
+        findViewById(R.id.record).setOnClickListener(new View.OnClickListener() {
+            boolean isRecording = false;
+
+            @Override
+            public void onClick(View v) {
+                if (isRecording) {
+                    vins.slamRecorder.stopRecord();
+                } else {
+                    vins.slamRecorder.startRecord();
+                }
+                isRecording = vins.slamRecorder.isRecording();
+                ((TextView) v).setText(isRecording ? "停止" : "录像");
+            }
+        });
         findViewById(R.id.java_camera_view).setOnClickListener(new View.OnClickListener() {
             boolean enable = false;
 
@@ -214,7 +214,7 @@ public class JavaCameraActivity extends Activity implements DataChangeInterface 
                     }
                     gpsInfo.append(count);
                 }
-//                ((TextView) findViewById(R.id.tv_gps_info)).setText(gpsInfo.toString());
+                ((TextView) findViewById(R.id.tv_gps_info)).setText(gpsInfo.toString());
             }
         });
     }
@@ -306,7 +306,6 @@ public class JavaCameraActivity extends Activity implements DataChangeInterface 
         sm.registerListener(listener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), delay);
     }
 
-    @SuppressLint("MissingPermission")
     private void subscribeToLocationUpdates(LocationListener listener, long minTimeMsec) {
         final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         final String bestProvider = locationManager.getBestProvider(new Criteria(), false);
