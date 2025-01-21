@@ -141,13 +141,13 @@ void ViewController::processImage(cv::Mat &image, double timeStamp, bool isScree
         shared_ptr<IMG_MSG> img_msg(new IMG_MSG());
         img_msg->header = systemUptime();//[[NSProcessInfo processInfo] systemUptime];
         if (lateast_imu_time <= 0) {
-            LOGI("IMU Timestamp negative: %lf, abort processImage()", lateast_imu_time);
+//            LOGI("IMU Timestamp negative: %lf, abort processImage()", lateast_imu_time);
             if (isScreenRotated)
                 cv::rotate(image, image, cv::ROTATE_180);
             return;
         }
         img_msg->header = timeStamp;
-        LOGI("image timeStamp%lf", timeStamp);
+//        LOGI("image timeStamp%lf", timeStamp);
         // if this is the case the feature-tracker wont work because the mask is cols x rows 480x640
         bool isNeedRotation = image.size() != frameSize;
         assert(!isNeedRotation);

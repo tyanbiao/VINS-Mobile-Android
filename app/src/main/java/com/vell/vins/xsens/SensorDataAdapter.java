@@ -32,7 +32,6 @@
 package com.vell.vins.xsens;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +42,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.xsens.dot.android.example.R;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -58,15 +58,26 @@ public class SensorDataAdapter extends RecyclerView.Adapter<SensorDataAdapter.Se
     /**
      * Default constructor.
      *
-     * @param dataList A list contains tag and data
      */
-    public SensorDataAdapter(ArrayList<Map.Entry<String, SensorData>> dataList) {
-        mDataList = dataList;
+    public SensorDataAdapter() {
     }
 
-    public void updateData(Map<String, SensorData> newData) {
-        mDataList = new ArrayList<>(newData.entrySet());
-        notifyDataSetChanged();
+    public void updateData(SensorData data) {
+        boolean isExist = false;
+        if (mDataList == null) {
+            mDataList = new ArrayList<>();
+        } else {
+            for (Map.Entry<String, SensorData> entry : mDataList) {
+                if (entry.getKey().equals(data.getAddress())) {
+                    entry.setValue(data);
+                    isExist = true;
+                    break;
+                }
+            }
+        }
+        if (!isExist) {
+            mDataList.add(new AbstractMap.SimpleEntry<>(data.getAddress(), data));
+        }
     }
 
     @NonNull

@@ -259,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_vins:
                 if (isNoConnectedSensor()) break;
+                Log.d(TAG, "start VINS activity");
                 Intent intent = new Intent(MainActivity.this, JavaCameraActivity.class);
                 startActivity(intent);
                 break;

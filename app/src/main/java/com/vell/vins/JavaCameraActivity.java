@@ -185,11 +185,10 @@ public class JavaCameraActivity extends Activity implements DataChangeInterface 
 
         RecyclerView recyclerView = findViewById(R.id.vins_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SensorDataAdapter(null);
+        adapter = new SensorDataAdapter();
         recyclerView.setAdapter(adapter);
         viewModel = new ViewModelProvider(SharedViewModelStore.getInstance()).get(SensorViewModel.class);
         viewModel.setDataChangeCallback(this);
-//        testUpdateData();
         vins = new Vins();
 
         subscribeToImuUpdates(vins, SensorManager.SENSOR_DELAY_FASTEST);
@@ -320,9 +319,10 @@ public class JavaCameraActivity extends Activity implements DataChangeInterface 
 
     @Override
     public void onDataChanged(String address, XsensDotData data) {
-        Map<String, SensorData> map = new HashMap<>();
         XsensSensorData d = new XsensSensorData(address, data);
-        map.put(d.getAddress(), d);
-        adapter.updateData(map);
+        adapter.updateData(d);
+        runOnUiThread(() -> {
+            adapter.notifyDataSetChanged();
+        });
     }
 }
