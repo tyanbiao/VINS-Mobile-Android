@@ -23,15 +23,23 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.thkoeln.jmoeller.vins_mobile_androidport.R;
+import com.vell.vins.xsens.SensorData;
+import com.vell.vins.xsens.SensorDataAdapter;
+import com.vell.vins.xsens.XsensSensorData;
+import com.xsens.dot.android.example.R;
+import com.xsens.dot.android.example.interfaces.DataChangeInterface;
+import com.xsens.dot.android.example.viewmodels.SensorViewModel;
+import com.xsens.dot.android.example.viewmodels.SharedViewModelStore;
+import com.xsens.dot.android.sdk.events.XsensDotData;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -41,11 +49,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
-public class JavaCameraActivity extends Activity {
+public class JavaCameraActivity extends Activity implements DataChangeInterface {
     private static final String TAG = JavaCameraActivity.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_CODE = 12345;
     private final int imageWidth = 640;
@@ -56,6 +66,8 @@ public class JavaCameraActivity extends Activity {
     private boolean saveFrame = false;
     private File saveDir = new File(Environment.getExternalStorageDirectory(), "1_test");
     private boolean useLocalImage = true;
+    private SensorViewModel viewModel;
+    private SensorDataAdapter adapter;
     private final ImageReader.OnImageAvailableListener onImageAvailableListener = new ImageReader.OnImageAvailableListener() {
         /*
          *  The following method will be called every time an image is ready
@@ -102,7 +114,7 @@ public class JavaCameraActivity extends Activity {
                 public void run() {
                     ((ImageView) findViewById(R.id.java_camera_view)).setImageBitmap(originBitmap);
 
-                    ((TextView) findViewById(R.id.tv_info)).setText(infoBuilder.toString());
+//                    ((TextView) findViewById(R.id.tv_info)).setText(infoBuilder.toString());
                 }
             });
             image.close();
@@ -128,39 +140,39 @@ public class JavaCameraActivity extends Activity {
         javaCamera = new JavaCamera();
         javaCamera.addImageReader(imageReader);
 
-        findViewById(R.id.tv_info).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (useLocalImage) {
-                    useLocalImage = false;
-                    Toast.makeText(JavaCameraActivity.this, "使用摄像头数据", Toast.LENGTH_SHORT).show();
-                } else {
-                    useLocalImage = true;
-                    Toast.makeText(JavaCameraActivity.this, "使用本地数据", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        findViewById(R.id.save_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveFrame = true;
-            }
-        });
-        findViewById(R.id.record).setOnClickListener(new View.OnClickListener() {
-            boolean isRecording = false;
-
-            @Override
-            public void onClick(View v) {
-                if (isRecording) {
-                    vins.slamRecorder.stopRecord();
-                } else {
-                    vins.slamRecorder.startRecord();
-                }
-                isRecording = vins.slamRecorder.isRecording();
-                ((TextView) v).setText(isRecording ? "停止" : "录像");
-            }
-        });
+//        findViewById(R.id.tv_info).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (useLocalImage) {
+//                    useLocalImage = false;
+//                    Toast.makeText(JavaCameraActivity.this, "使用摄像头数据", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    useLocalImage = true;
+//                    Toast.makeText(JavaCameraActivity.this, "使用本地数据", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//
+//        findViewById(R.id.save_image).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                saveFrame = true;
+//            }
+//        });
+//        findViewById(R.id.record).setOnClickListener(new View.OnClickListener() {
+//            boolean isRecording = false;
+//
+//            @Override
+//            public void onClick(View v) {
+//                if (isRecording) {
+//                    vins.slamRecorder.stopRecord();
+//                } else {
+//                    vins.slamRecorder.startRecord();
+//                }
+//                isRecording = vins.slamRecorder.isRecording();
+//                ((TextView) v).setText(isRecording ? "停止" : "录像");
+//            }
+//        });
         findViewById(R.id.java_camera_view).setOnClickListener(new View.OnClickListener() {
             boolean enable = false;
 
@@ -171,6 +183,13 @@ public class JavaCameraActivity extends Activity {
             }
         });
 
+        RecyclerView recyclerView = findViewById(R.id.vins_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new SensorDataAdapter(null);
+        recyclerView.setAdapter(adapter);
+        viewModel = new ViewModelProvider(SharedViewModelStore.getInstance()).get(SensorViewModel.class);
+        viewModel.setDataChangeCallback(this);
+//        testUpdateData();
         vins = new Vins();
 
         subscribeToImuUpdates(vins, SensorManager.SENSOR_DELAY_FASTEST);
@@ -196,7 +215,7 @@ public class JavaCameraActivity extends Activity {
                     }
                     gpsInfo.append(count);
                 }
-                ((TextView) findViewById(R.id.tv_gps_info)).setText(gpsInfo.toString());
+//                ((TextView) findViewById(R.id.tv_gps_info)).setText(gpsInfo.toString());
             }
         });
     }
@@ -204,6 +223,9 @@ public class JavaCameraActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (viewModel != null) {
+            viewModel.setDataChangeCallback(this);
+        }
         javaCamera.open(this, new CameraDevice.StateCallback() {
             @Override
             public void onOpened(CameraDevice camera) {
@@ -294,5 +316,13 @@ public class JavaCameraActivity extends Activity {
 
     static {
         System.loadLibrary("opencv_java3");
+    }
+
+    @Override
+    public void onDataChanged(String address, XsensDotData data) {
+        Map<String, SensorData> map = new HashMap<>();
+        XsensSensorData d = new XsensSensorData(address, data);
+        map.put(d.getAddress(), d);
+        adapter.updateData(map);
     }
 }

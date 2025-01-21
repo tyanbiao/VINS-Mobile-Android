@@ -48,6 +48,7 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import com.xsens.dot.android.example.R;
 import com.xsens.dot.android.example.databinding.FragmentOtaBinding;
 import com.xsens.dot.android.example.viewmodels.SensorViewModel;
+import com.xsens.dot.android.example.viewmodels.SharedViewModelStore;
 import com.xsens.dot.android.sdk.models.XsensDotDevice;
 import com.xsens.dot.android.sdk.ota.XsensDotOtaManager;
 import com.xsens.dot.android.sdk.ota.interfaces.XsensDotOtaCallback;
@@ -191,7 +192,7 @@ public class OtaFragment extends Fragment implements XsensDotOtaCallback {
      */
     private void initViewModel(ViewModelStoreOwner context) {
         if (mSensorViewModel == null) {
-            mSensorViewModel = SensorViewModel.getInstance(context);
+            mSensorViewModel = SensorViewModel.getInstance(SharedViewModelStore.getInstance());
         }
     }
 

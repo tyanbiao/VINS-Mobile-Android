@@ -55,6 +55,7 @@ import com.xsens.dot.android.example.databinding.FragmentDataBinding;
 import com.xsens.dot.android.example.interfaces.DataChangeInterface;
 import com.xsens.dot.android.example.interfaces.StreamingClickInterface;
 import com.xsens.dot.android.example.viewmodels.SensorViewModel;
+import com.xsens.dot.android.example.viewmodels.SharedViewModelStore;
 import com.xsens.dot.android.sdk.events.XsensDotData;
 import com.xsens.dot.android.sdk.interfaces.XsensDotSyncCallback;
 import com.xsens.dot.android.sdk.models.FilterProfileInfo;
@@ -233,7 +234,7 @@ public class DataFragment extends Fragment implements StreamingClickInterface, D
 
         if (getActivity() != null) {
 
-            mSensorViewModel = SensorViewModel.getInstance(getActivity());
+            mSensorViewModel = SensorViewModel.getInstance(SharedViewModelStore.getInstance());
             // Implement DataChangeInterface and override onDataChanged() function to receive data.
             mSensorViewModel.setDataChangeCallback(this);
         }

@@ -55,12 +55,12 @@ import androidx.lifecycle.Observer;
 import com.vell.vins.JavaCameraActivity;
 import com.xsens.dot.android.example.R;
 import com.xsens.dot.android.example.databinding.ActivityMainBinding;
-import com.xsens.dot.android.example.interfaces.DataChangeInterface;
 import com.xsens.dot.android.example.interfaces.ScanClickInterface;
 import com.xsens.dot.android.example.interfaces.StreamingClickInterface;
 import com.xsens.dot.android.example.utils.Utils;
 import com.xsens.dot.android.example.viewmodels.BluetoothViewModel;
 import com.xsens.dot.android.example.viewmodels.SensorViewModel;
+import com.xsens.dot.android.example.viewmodels.SharedViewModelStore;
 import com.xsens.dot.android.sdk.events.XsensDotData;
 
 /**
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
                 mStreamingListener.onStreamingTriggered();
                 break;
             case R.id.action_vins:
-//                if (isNoConnectedSensor()) break;
+                if (isNoConnectedSensor()) break;
                 Intent intent = new Intent(MainActivity.this, JavaCameraActivity.class);
                 startActivity(intent);
                 break;
@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mSensorViewModel = SensorViewModel.getInstance(this);
+        mSensorViewModel = SensorViewModel.getInstance(SharedViewModelStore.getInstance());
 
         mSensorViewModel.isStreaming().observe(this, new Observer<Boolean>() {
 

@@ -56,6 +56,7 @@ import com.xsens.dot.android.example.interfaces.ScanClickInterface;
 import com.xsens.dot.android.example.interfaces.SensorClickInterface;
 import com.xsens.dot.android.example.viewmodels.BluetoothViewModel;
 import com.xsens.dot.android.example.viewmodels.SensorViewModel;
+import com.xsens.dot.android.example.viewmodels.SharedViewModelStore;
 import com.xsens.dot.android.sdk.interfaces.XsensDotScannerCallback;
 import com.xsens.dot.android.sdk.models.XsensDotDevice;
 import com.xsens.dot.android.sdk.utils.XsensDotScanner;
@@ -298,7 +299,7 @@ public class ScanFragment extends Fragment implements XsensDotScannerCallback, S
         if (getActivity() != null) {
 
             mBluetoothViewModel = BluetoothViewModel.getInstance(getActivity());
-            mSensorViewModel = SensorViewModel.getInstance(getActivity());
+            mSensorViewModel = SensorViewModel.getInstance(SharedViewModelStore.getInstance());
 
             mBluetoothViewModel.isBluetoothEnabled().observe(this, new Observer<Boolean>() {
 
